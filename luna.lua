@@ -5,12 +5,13 @@
 
 canFlyAddress = 0x16C
 flightTimeAddress = 0x170
+playerSpawnPositions = {{x = 1, y = 1}, {x = 2, y = 2}}
 
--- Run code on the first frame
+-- Run code on the first frame (first point when entities like players have been loaded)
 function onStart()
     --Your code here
-    Text.showMessageBox("Level Start")
     initPlayers()
+    Text.showMessageBox(string.format("Level Start %d %d", playerSpawnPositions[1].x, playerSpawnPositions[1].y))
 end
 
 -- Run code every frame (~1/65 second)
@@ -36,9 +37,13 @@ function onEvent(eventName)
 end
 
 function initPlayers()
+    playerSpawnPositions[1].x = player.x
+    playerSpawnPositions[1].y = player.y
     if Player.count() < 2 then 
         return
     end
+    playerSpawnPositions[2].x = player2.x
+    playerSpawnPositions[2].y = player2.y
 --    enable players to fly via blue kuribo shoe
 --    player.mount = MOUNT_BOOT
 --    player2.mount = MOUNT_BOOT
@@ -46,4 +51,14 @@ function initPlayers()
 --    player2.mountColor = 3
 end
 
+--function onPostPlayerKill(harmedPlayer)
+    -- revive player
+    --eventToken.cancelled = true
+    --pIndx = harmedPlayer.idx
+    --harmedPlayer.dropItemKeyPressing = true
+    --harmedPlayer:teleport(playerSpawnPositions[pIndx].x, playerSpawnPositions[pIndx].y, false)
+--end
 
+function revivePlayer(p)
+    
+end
