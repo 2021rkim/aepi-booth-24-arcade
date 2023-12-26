@@ -62,3 +62,8 @@ end
 function revivePlayer(p)
     
 end
+
+function Timer.onEnd()
+    Text.showMessageBox("Game Over!")
+    Level.load(nil, nil, nil)
+end
