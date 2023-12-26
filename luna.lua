@@ -10,6 +10,7 @@ playerSpawnPositions = {{x = 1, y = 1}, {x = 2, y = 2}}
 -- Run code on the first frame (first point when entities like players have been loaded)
 function onStart()
     --Your code here
+    Timer.hurryTime = 0
     initPlayers()
     Text.showMessageBox(string.format("Level Start %d %d", playerSpawnPositions[1].x, playerSpawnPositions[1].y))
 end
