@@ -9,7 +9,7 @@ isSpinJumpingAddress = 0x50
 playerSpawnPositions = {{x = 1, y = 1}, {x = 2, y = 2}}
 enemyID = 177
 eggID = 186
-respawnTime = 200
+respawnTime = 100
 
 playerOneDead = false
 playerTwoDead = false
@@ -39,21 +39,24 @@ function onTick()
         player2:mem(isSpinJumpingAddress, FIELD_BOOL, true)
     end
     
+    
     if playerOneDead then 
         playerOneRespawnTimer = playerOneRespawnTimer - 1
         if playerOneRespawnTimer == 0 then
             playerOneDead = false
-            player:teleport(playerSpawnPositions[1].x, playerSpawnPositions[1].y, false)
+            player.x = playerSpawnPositions[1].x
+            player.y = playerSpawnPositions[1].y
         end
     end
 
     if playerTwoDead then 
         playerTwoRespawnTimer = playerTwoRespawnTimer - 1
         if playerTwoRespawnTimer == 0 then
-            playerTwoDead = false
-            player2:teleport(playerSpawnPositions[2].x, playerSpawnPositions[2].y, false)
+            player2.x = playerSpawnPositions[2].x
+            player2.y = playerSpawnPositions[2].y
         end
     end
+    
 end
 
 function onNPCHarm(eventName, harmedNPC, harmType, culprit)
@@ -61,6 +64,7 @@ function onNPCHarm(eventName, harmedNPC, harmType, culprit)
         Text.showMessageBox(string.format("CULPRIT %d", culprit.character))
         local egg = NPC.spawn(eggID, harmedNPC.x, harmedNPC.y, 0)
     end
+    culprit:mem(0x138, FIELD_FLOAT, 100)
 end
 
 -- Run code when internal event of the SMBX Engine has been triggered
@@ -77,27 +81,19 @@ function initPlayers()
     end
     playerSpawnPositions[2].x = player2.x
     playerSpawnPositions[2].y = player2.y
---    enable players to fly via blue kuribo shoe
---    player.mount = MOUNT_BOOT
---    player2.mount = MOUNT_BOOT
---    player.mountColor = 3
---    player2.mountColor = 3
 end
-
---function onPostPlayerKill(harmedPlayer)
-    -- revive player
-    --eventToken.cancelled = true
-    --pIndx = harmedPlayer.idx
-    --harmedPlayer.dropItemKeyPressing = true
-    --harmedPlayer:teleport(playerSpawnPositions[pIndx].x, playerSpawnPositions[pIndx].y, false)
---end
 
 function onPlayerKill(eventToken, harmedPlayer)
     eventToken.cancelled = true
     Text.showMessageBox(string.format("harmedPlayer %d", harmedPlayer.character))
     pIndx = harmedPlayer.idx
     harmedPlayer.dropItemKeyPressing = true
-    harmedPlayer:teleport(-199616, -200000, false)
+    harmedPlayer.speedX = 0
+    harmedPlayer.speedY = 0
+    harmedPlayer:mem(0x140, FIELD_WORD, 200)
+    --harmedPlayer:teleport(-199616, -200000, false)
+    harmedPlayer.x = -199680 --arbitrary block position above the visible screen
+    harmedPlayer.y = -200672
     if pIndx == 1 then 
         playerOneDead = true
         playerOneRespawnTimer = respawnTime
