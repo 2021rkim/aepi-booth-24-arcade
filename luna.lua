@@ -5,13 +5,17 @@
 
 canFlyAddress = 0x16C
 flightTimeAddress = 0x170
+isSpinJumpingAddress = 0x50
 playerSpawnPositions = {{x = 1, y = 1}, {x = 2, y = 2}}
+enemyID = 177
+eggID = 186
 
 -- Run code on the first frame (first point when entities like players have been loaded)
 function onStart()
     --Your code here
     Timer.hurryTime = 0
     initPlayers()
+    spawnEnemy(-199304, -200380)
     Text.showMessageBox(string.format("Level Start %d %d", playerSpawnPositions[1].x, playerSpawnPositions[1].y))
 end
 
@@ -21,15 +25,20 @@ function onTick()
     --Your code here
     player:mem(canFlyAddress, FIELD_BOOL, true)
     player:mem(flightTimeAddress, FIELD_WORD, 0xFF)
+    player:mem(isSpinJumpingAddress, FIELD_BOOL, true)
     if Player.count() == 2 then
         player2:mem(canFlyAddress, FIELD_BOOL, true)
         player2:mem(flightTimeAddress, FIELD_WORD, 0xFF)
+        player2:mem(isSpinJumpingAddress, FIELD_BOOL, true)
     end
 end
 
---function onNPCHarm(eventName, killedNPC, harmType, culprit)
---    Text.showMessageBox(string.format("CULPRIT %d", culprit.character))
---end
+function onNPCHarm(eventName, harmedNPC, harmType, culprit)
+    if harmedNPC.id == enemyID then
+        if cuplrit ~= nil then Text.showMessageBox(string.format("CULPRIT %d", culprit.character)) end
+        local egg = NPC.spawn(eggID, harmedNPC.x, harmedNPC.y, 0)
+    end
+end
 
 -- Run code when internal event of the SMBX Engine has been triggered
 -- eventName - name of triggered event
@@ -67,4 +76,10 @@ end
 function Timer.onEnd()
     Text.showMessageBox("Game Over!")
     Level.load(nil, nil, nil)
+end
+
+function spawnEnemy(x, y)
+    local enemy = NPC.spawn(enemyID, x, y)
+    enemy.ai1 = 6
+    enemy.speedX = 6
 end
