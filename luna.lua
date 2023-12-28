@@ -9,6 +9,12 @@ isSpinJumpingAddress = 0x50
 playerSpawnPositions = {{x = 1, y = 1}, {x = 2, y = 2}}
 enemyID = 177
 eggID = 186
+respawnTime = 200
+
+playerOneDead = false
+playerTwoDead = false
+playerOneRespawnTimer = 0
+playerTwoRespawnTimer = 0
 
 -- Run code on the first frame (first point when entities like players have been loaded)
 function onStart()
@@ -26,16 +32,33 @@ function onTick()
     player:mem(canFlyAddress, FIELD_BOOL, true)
     player:mem(flightTimeAddress, FIELD_WORD, 0xFF)
     player:mem(isSpinJumpingAddress, FIELD_BOOL, true)
+    
     if Player.count() == 2 then
         player2:mem(canFlyAddress, FIELD_BOOL, true)
         player2:mem(flightTimeAddress, FIELD_WORD, 0xFF)
         player2:mem(isSpinJumpingAddress, FIELD_BOOL, true)
     end
+    
+    if playerOneDead then 
+        playerOneRespawnTimer = playerOneRespawnTimer - 1
+        if playerOneRespawnTimer == 0 then
+            playerOneDead = false
+            player:teleport(playerSpawnPositions[1].x, playerSpawnPositions[1].y, false)
+        end
+    end
+
+    if playerTwoDead then 
+        playerTwoRespawnTimer = playerTwoRespawnTimer - 1
+        if playerTwoRespawnTimer == 0 then
+            playerTwoDead = false
+            player2:teleport(playerSpawnPositions[2].x, playerSpawnPositions[2].y, false)
+        end
+    end
 end
 
 function onNPCHarm(eventName, harmedNPC, harmType, culprit)
     if harmedNPC.id == enemyID then
-        if cuplrit ~= nil then Text.showMessageBox(string.format("CULPRIT %d", culprit.character)) end
+        Text.showMessageBox(string.format("CULPRIT %d", culprit.character))
         local egg = NPC.spawn(eggID, harmedNPC.x, harmedNPC.y, 0)
     end
 end
@@ -69,8 +92,20 @@ end
     --harmedPlayer:teleport(playerSpawnPositions[pIndx].x, playerSpawnPositions[pIndx].y, false)
 --end
 
-function revivePlayer(p)
-    
+function onPlayerKill(eventToken, harmedPlayer)
+    eventToken.cancelled = true
+    Text.showMessageBox(string.format("harmedPlayer %d", harmedPlayer.character))
+    pIndx = harmedPlayer.idx
+    harmedPlayer.dropItemKeyPressing = true
+    harmedPlayer:teleport(-199616, -200000, false)
+    if pIndx == 1 then 
+        playerOneDead = true
+        playerOneRespawnTimer = respawnTime
+    end
+    if pIndx == 2 then
+        playerTwoDead = true
+        playerTwoRespawnTimer = respawnTime
+    end
 end
 
 function Timer.onEnd()
@@ -81,5 +116,4 @@ end
 function spawnEnemy(x, y)
     local enemy = NPC.spawn(enemyID, x, y)
     enemy.ai1 = 6
-    enemy.speedX = 6
 end
