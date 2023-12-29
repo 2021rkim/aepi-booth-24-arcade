@@ -2,7 +2,7 @@
 -- Episode code for every level
 -- Created 16:57 2023-12-22
 --------------------------------------------------
-
+require("playerphysicspatch")
 canFlyAddress = 0x16C
 flightTimeAddress = 0x170
 isSpinJumpingAddress = 0x50
@@ -10,6 +10,7 @@ playerSpawnPositions = {{x = 1, y = 1}, {x = 2, y = 2}}
 enemyID = 177
 eggID = 186
 respawnTime = 100
+speedCap = 120
 
 playerOneDead = false
 playerTwoDead = false
@@ -39,7 +40,6 @@ function onTick()
         player2:mem(isSpinJumpingAddress, FIELD_BOOL, true)
     end
     
-    
     if playerOneDead then 
         playerOneRespawnTimer = playerOneRespawnTimer - 1
         if playerOneRespawnTimer == 0 then
@@ -64,7 +64,7 @@ function onNPCHarm(eventName, harmedNPC, harmType, culprit)
         Text.showMessageBox(string.format("CULPRIT %d", culprit.character))
         local egg = NPC.spawn(eggID, harmedNPC.x, harmedNPC.y, 0)
     end
-    culprit:mem(0x138, FIELD_FLOAT, 100)
+    culprit:mem(0x138, FIELD_FLOAT, culprit.speedX) 
 end
 
 -- Run code when internal event of the SMBX Engine has been triggered
@@ -74,6 +74,9 @@ function onEvent(eventName)
 end
 
 function initPlayers()
+    Defines.player_walkspeed = 10
+    Defines.player_grav = 0.45
+    Defines.gravity = 100
     playerSpawnPositions[1].x = player.x
     playerSpawnPositions[1].y = player.y
     if Player.count() < 2 then 

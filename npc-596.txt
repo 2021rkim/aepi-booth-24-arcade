@@ -1,0 +1,3 @@
+playerblocktop=true
+npcblocktop=true
+bouncestrength=10
