@@ -31,12 +31,12 @@ end
 function onTick()
     --Your code here
     player:mem(canFlyAddress, FIELD_BOOL, true)
-    player:mem(flightTimeAddress, FIELD_WORD, 0xFF)
+    player:mem(flightTimeAddress, FIELD_WORD, 0xFFFF)
     player:mem(isSpinJumpingAddress, FIELD_BOOL, true)
     
     if Player.count() == 2 then
         player2:mem(canFlyAddress, FIELD_BOOL, true)
-        player2:mem(flightTimeAddress, FIELD_WORD, 0xFF)
+        player2:mem(flightTimeAddress, FIELD_WORD, 0xFFFF)
         player2:mem(isSpinJumpingAddress, FIELD_BOOL, true)
     end
     
@@ -76,7 +76,8 @@ end
 function initPlayers()
     Defines.player_walkspeed = 8
     Defines.player_grav = 0.45
-    Defines.gravity = 100
+    Defines.gravity = 10
+    Defines.jumpheight = 0
     playerSpawnPositions[1].x = player.x
     playerSpawnPositions[1].y = player.y
     if Player.count() < 2 then 
