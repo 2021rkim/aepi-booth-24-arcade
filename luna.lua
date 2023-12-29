@@ -74,7 +74,7 @@ function onEvent(eventName)
 end
 
 function initPlayers()
-    Defines.player_walkspeed = 10
+    Defines.player_walkspeed = 8
     Defines.player_grav = 0.45
     Defines.gravity = 100
     playerSpawnPositions[1].x = player.x

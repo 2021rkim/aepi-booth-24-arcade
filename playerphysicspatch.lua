@@ -3,13 +3,13 @@ local lastXSpeed = {}
 local ppp = {}
 
 ppp.speedXDecelerationModifier = 0
-ppp.groundTouchingDecelerationMultiplier = 3
+ppp.groundTouchingDecelerationMultiplier = 8
 ppp.groundNotTouchingDecelerationMultiplier = 0
 
-ppp.accelerationMaxSpeedThereshold = 10
+ppp.accelerationMaxSpeedThereshold = 8
 ppp.accelerationMinSpeedThereshold = 0 --default 0.1
-ppp.accelerationSpeedDifferenceThereshold = 0.1
-ppp.accelerationMultiplier = 2 --default 1.5
+ppp.accelerationSpeedDifferenceThereshold = 50
+ppp.accelerationMultiplier = 3 --default 1.5
 
 ppp.aerialIdleDeceleration = 1.001
 
