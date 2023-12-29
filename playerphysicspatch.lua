@@ -11,9 +11,9 @@ ppp.groundNotTouchingDecelerationMultiplier = 0
 ppp.accelerationMaxSpeedThereshold = 8
 ppp.accelerationMinSpeedThereshold = 0 --default 0.1
 ppp.accelerationSpeedDifferenceThereshold = 50
-ppp.accelerationMultiplier = 3 --default 1.5
+ppp.accelerationMultiplier = 2.5 --default 1.5
 
-ppp.accelerationYMultiplier = 10
+ppp.accelerationYMultiplier = 9
 ppp.accelerationMaxYSpeedThreshold = 8
 
 ppp.aerialIdleDeceleration = 1.001

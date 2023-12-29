@@ -64,7 +64,12 @@ function onNPCHarm(eventName, harmedNPC, harmType, culprit)
         Text.showMessageBox(string.format("CULPRIT %d", culprit.character))
         local egg = NPC.spawn(eggID, harmedNPC.x, harmedNPC.y, 0)
     end
-    culprit:mem(0x138, FIELD_FLOAT, culprit.speedX) 
+    --culprit:mem(0x138, FIELD_FLOAT, culprit.speedX) 
+end
+
+function onPlayerHarm(eventToken, harmedPlayer)
+    eventToken.cancelled = true
+    harmedPlayer.speedX = -4 * harmedPlayer.direction
 end
 
 -- Run code when internal event of the SMBX Engine has been triggered
